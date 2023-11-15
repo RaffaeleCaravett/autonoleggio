@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +22,7 @@ public class ClienteController {
     private AuthService authService;
 
     @GetMapping("")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public Page<Cliente> getCliente(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size,
                                     @RequestParam(defaultValue = "id") String orderBy){
@@ -38,7 +36,7 @@ public class ClienteController {
             throw new BadRequestException(validation.getAllErrors());
         } else {
             try {
-                return authService.save(body);
+                return authService.registerUser(body);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -46,34 +44,19 @@ public class ClienteController {
     }
 
 
-    @GetMapping("/me")
-    public UserDetails getProfile(@AuthenticationPrincipal UserDetails currentUser){
-        return currentUser;
-    };
-
-    @PutMapping("/me")
-    public UserDetails getProfile(@AuthenticationPrincipal Cliente currentUser, @RequestBody Cliente body){
-        return clienteService.findByIdAndUpdate(currentUser.getId(), body);
-    }
-
-    @DeleteMapping("/me")
-    @ResponseStatus(HttpStatus.NO_CONTENT) // <-- 204 NO CONTENT
-    public void getProfile(@AuthenticationPrincipal Cliente currentUser){
-        clienteService.findByIdAndDelete(currentUser.getId());
-    };
     @GetMapping(value = "/{id}")
     public Cliente findById(@PathVariable int id)  {
         return clienteService.findById(id);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     public Cliente findByIdAndUpdate(@PathVariable int id, @RequestBody Cliente body) throws NotFoundException {
         return clienteService.findByIdAndUpdate(id, body);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     @ResponseStatus(HttpStatus.NO_CONTENT) // <-- 204 NO CONTENT
     public void findByIdAndDelete(@PathVariable int id) throws NotFoundException {
         clienteService.findByIdAndDelete(id);

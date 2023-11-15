@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
 public class AutoService {
     @Autowired
@@ -51,6 +53,10 @@ public class AutoService {
         return autoRepository.findByEmail(email)
                 .orElseThrow(() -> new Exception("Utente con email "+ email + " non trovato"));
     }
+    public Auto save(Auto body) throws IOException {
 
+        Auto auto = new Auto(body.getTipo(), body.getDataImmatricolazione());
+        return autoRepository.save(auto);
+    }
 
 }

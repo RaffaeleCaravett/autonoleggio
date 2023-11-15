@@ -33,4 +33,21 @@ public class Noleggio {
     @OneToOne
     @JoinColumn(name="auto_id")
     private Auto auto;
+
+
+    public Noleggio(LocalDate dataInizioNoleggio, Durata durata, Stato stato, Cliente cliente, Auto auto) {
+        this.dataInizioNoleggio = dataInizioNoleggio;
+        this.durata = durata;
+        if(durata==Durata.SETTIMANALE){
+            this.dataFineNoleggio = dataInizioNoleggio.plusDays(7);
+        }else if(durata==Durata.MENSILE){
+            this.dataFineNoleggio = dataInizioNoleggio.plusMonths(1);
+        }else{
+            this.dataFineNoleggio = dataInizioNoleggio.plusYears(1);
+        }
+        this.dataFineNoleggio = dataFineNoleggio;
+        this.stato = stato;
+        this.cliente = cliente;
+        this.auto = auto;
+    }
 }
