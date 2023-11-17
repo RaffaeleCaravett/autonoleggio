@@ -24,10 +24,13 @@ public class ClienteService {
 
     public Page<Cliente> getClienti(int page, int size, String orderBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-
-        return clienteRepository.findAll(pageable);
+try{
+    return clienteRepository.findAll(pageable);
+}catch (Exception e){
+    System.out.println(e.getMessage());
+    return null;
+}
     }
-
     public Cliente findById(long id) throws NotFoundException {
         return clienteRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }

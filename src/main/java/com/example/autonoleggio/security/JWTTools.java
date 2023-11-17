@@ -18,7 +18,7 @@ public class JWTTools {
 
         return Jwts.builder().setSubject(String.valueOf(user.getId()))// Subject <-- A chi appartiene il token
                 .setIssuedAt(new Date(System.currentTimeMillis())) // Data di emissione (IAT - Issued At)
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7 ) ) // Data di scadenza (Expiration Date)
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15 ) ) // Data di scadenza (Expiration Date)
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes())).compact();
 
     } // Si utilizza al login

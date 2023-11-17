@@ -20,7 +20,7 @@ public class NoleggioController {
     private NoleggioService noleggioService;
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('AUTONOLEGGIO','USER')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Noleggio> getNoleggio(@RequestParam(defaultValue = "0") int page,
                               @RequestParam(defaultValue = "10") int size,
                               @RequestParam(defaultValue = "id") String orderBy){
@@ -29,7 +29,7 @@ public class NoleggioController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED) // <-- 201
-    @PreAuthorize("hasAuthority('AUTONOLEGGIO')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Noleggio saveNoleggio(@RequestBody @Validated NoleggioDTO body, BindingResult validation){
         if(validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
@@ -43,18 +43,23 @@ public class NoleggioController {
     }
 
     @GetMapping(value = "/{id}")
-    @PreAuthorize("hasAuthority('AUTONOLEGGIO','USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Noleggio findById(@PathVariable int id)  {
         return noleggioService.findById(id);
     }
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('AUTONOLEGGIO')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Noleggio findByIdAndUpdate(@PathVariable int id, @RequestBody NoleggioDTO body) throws NotFoundException {
         return noleggioService.findByIdAndUpdate(id, body);
     }
 
+    @PutMapping("endNoleggio/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Noleggio endNoleggio(@PathVariable int id) throws NotFoundException {
+        return noleggioService.endNoleggio(id);
+    }
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('AUTONOLEGGIO')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT) // <-- 204 NO CONTENT
     public void findByIdAndDelete(@PathVariable int id) throws NotFoundException {
         noleggioService.findByIdAndDelete(id);

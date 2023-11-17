@@ -22,7 +22,7 @@ public class ClienteController {
     private AuthService authService;
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Cliente> getCliente(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size,
                                     @RequestParam(defaultValue = "id") String orderBy){
@@ -31,12 +31,14 @@ public class ClienteController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED) // <-- 201
-    public Cliente saveDipendente(@RequestBody @Validated Cliente body, BindingResult validation){
+    @PreAuthorize("hasAuthority('USER')")
+    public long saveCliente(@RequestBody @Validated Cliente body, BindingResult validation){
         if(validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
         } else {
             try {
-                return authService.registerUser(body);
+                authService.registerUser(body);
+                return body.getId();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -45,18 +47,19 @@ public class ClienteController {
 
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Cliente findById(@PathVariable int id)  {
         return clienteService.findById(id);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Cliente findByIdAndUpdate(@PathVariable int id, @RequestBody Cliente body) throws NotFoundException {
         return clienteService.findByIdAndUpdate(id, body);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @ResponseStatus(HttpStatus.NO_CONTENT) // <-- 204 NO CONTENT
     public void findByIdAndDelete(@PathVariable int id) throws NotFoundException {
         clienteService.findByIdAndDelete(id);

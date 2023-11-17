@@ -42,9 +42,9 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             // 3.1 Cerco l'utente nel database tramite id (l'id sta nel payload del token, quindi devo estrarlo da lì)
             String id = jwtTools.extractIdFromToken(token);
             Cliente currentUser = clienteService.findById(Integer.parseInt(id));
-
             // 3.2 Segnalo a Spring Security che l'utente ha il permesso di procedere
             // Se non facciamo questa procedura, ci verrà comunque tornato 403
+            System.out.println(currentUser);
             Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
 

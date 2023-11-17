@@ -26,6 +26,7 @@ public class Noleggio {
     private LocalDate dataInizioNoleggio;
     private Durata durata;
     private LocalDate dataFineNoleggio;
+    @Enumerated(EnumType.STRING)
     private Stato stato;
     @OneToOne
     @JoinColumn(name = "cliente_id")
@@ -35,8 +36,8 @@ public class Noleggio {
     private Auto auto;
 
 
-    public Noleggio(LocalDate dataInizioNoleggio, Durata durata, Stato stato, Cliente cliente, Auto auto) {
-        this.dataInizioNoleggio = dataInizioNoleggio;
+    public Noleggio(Durata durata, Cliente cliente, Auto auto) {
+        this.dataInizioNoleggio = LocalDate.now();
         this.durata = durata;
         if(durata==Durata.SETTIMANALE){
             this.dataFineNoleggio = dataInizioNoleggio.plusDays(7);
@@ -46,7 +47,7 @@ public class Noleggio {
             this.dataFineNoleggio = dataInizioNoleggio.plusYears(1);
         }
         this.dataFineNoleggio = dataFineNoleggio;
-        this.stato = stato;
+        this.stato = Stato.IN_CORSO;
         this.cliente = cliente;
         this.auto = auto;
     }

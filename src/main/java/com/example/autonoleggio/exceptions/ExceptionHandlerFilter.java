@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class ExceptionHandlerFilter extends OncePerRequestFilter{
+public class ExceptionHandlerFilter extends OncePerRequestFilter {
     @Autowired
     // @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver handlerExceptionResolver;

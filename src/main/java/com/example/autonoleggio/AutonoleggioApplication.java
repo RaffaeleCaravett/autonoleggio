@@ -8,6 +8,9 @@ public class AutonoleggioApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AutonoleggioApplication.class, args);
-	}
 
+		final int a;
+		a = 12;
+		
+	}
 }

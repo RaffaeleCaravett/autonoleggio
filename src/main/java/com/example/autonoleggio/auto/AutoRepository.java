@@ -10,7 +10,6 @@ import java.util.Optional;
 @Repository
 public interface AutoRepository extends JpaRepository<Auto,Long> {
 
-    Optional<Auto> findByEmail(String ics);
     @Query(value = "SELECT * FROM auto ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
     Auto findRandomCliente();
 }

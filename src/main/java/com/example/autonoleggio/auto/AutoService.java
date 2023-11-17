@@ -49,14 +49,10 @@ public class AutoService {
         return autoRepository.findRandomCliente();
     }
 
-    public Auto findByEmail(String email) throws Exception {
-        return autoRepository.findByEmail(email)
-                .orElseThrow(() -> new Exception("Utente con email "+ email + " non trovato"));
-    }
     public Auto save(Auto body) throws IOException {
-
-        Auto auto = new Auto(body.getTipo(), body.getDataImmatricolazione());
+        Auto auto = new Auto(body.getTipo());
         return autoRepository.save(auto);
+
     }
 
 }

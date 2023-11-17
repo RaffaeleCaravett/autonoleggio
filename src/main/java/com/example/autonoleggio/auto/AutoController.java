@@ -23,7 +23,7 @@ public class AutoController {
     private AuthService authService;
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('AUTONOLEGGIO','USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Auto> getAuto(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size,
                                     @RequestParam(defaultValue = "id") String orderBy){
@@ -32,7 +32,7 @@ public class AutoController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED) // <-- 201
-    @PreAuthorize("hasAuthority('AUTONOLEGGIO')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Auto saveAuto(@RequestBody @Validated Auto body, BindingResult validation){
         if(validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
@@ -46,18 +46,18 @@ public class AutoController {
     }
 
     @GetMapping(value = "/{id}")
-    @PreAuthorize("hasAuthority('AUTONOLEGGIO','USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Auto findById(@PathVariable int id)  {
         return autoService.findById(id);
     }
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Auto findByIdAndUpdate(@PathVariable int id, @RequestBody Auto body) throws NotFoundException {
         return autoService.findByIdAndUpdate(id, body);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('AUTONOLEGGIO')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT) // <-- 204 NO CONTENT
     public void findByIdAndDelete(@PathVariable int id) throws NotFoundException {
         autoService.findByIdAndDelete(id);

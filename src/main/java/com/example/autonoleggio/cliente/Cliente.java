@@ -2,6 +2,7 @@ package com.example.autonoleggio.cliente;
 
 import com.example.autonoleggio.enums.Role;
 import com.example.autonoleggio.noleggio.Noleggio;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,8 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -24,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name="clienti")
-@JsonIgnoreProperties({"password", "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
+@JsonIgnoreProperties({ "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
 public class Cliente  implements UserDetails {
 
     @Id
@@ -35,11 +36,23 @@ public class Cliente  implements UserDetails {
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "L'email inserita non è valida")
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
     private Role role;
+    @JsonIgnore
     @OneToOne(mappedBy = "cliente")
     private Noleggio noleggio;
     @CreationTimestamp
-    private Date createdAt;
+    private LocalDate createdAt;
+
+
+    public Cliente(String nome, String cognome, String email, String password) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.email = email;
+        this.password = password;
+        this.role=Role.USER;
+        this.createdAt= LocalDate.now();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
